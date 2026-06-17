@@ -1,0 +1,170 @@
+"use client";
+
+import { useState } from "react";
+
+const navLinks = [
+  { href: "#home", label: "בית" },
+  { href: "#blog", label: "בלוג" },
+  { href: "#shop", label: "החנות" },
+  { href: "#recovery", label: "שיקום" },
+  { href: "#treatments", label: "טיפולים" },
+  { href: "#contact", label: "צור קשר" },
+];
+
+export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <header
+      className="fixed top-0 right-0 left-0 z-50"
+      style={{
+        background: "linear-gradient(135deg, #0B1F4A 0%, #1A3A7C 100%)",
+        borderBottom: "1px solid rgba(43, 87, 184, 0.4)",
+        backdropFilter: "blur(12px)",
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo — right side in RTL */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <a
+              href="#home"
+              className="flex items-center gap-2 text-white no-underline"
+              style={{ textDecoration: "none" }}
+            >
+              <span
+                className="pulse-dot inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
+                style={{ background: "#00E676" }}
+              />
+              <span
+                className="text-xl font-extrabold tracking-widest"
+                style={{ color: "#F0F4FF", letterSpacing: "0.12em" }}
+              >
+                DR.{" "}
+                <span style={{ color: "#00E676" }} className="glow-green">
+                  SPORT
+                </span>
+              </span>
+            </a>
+          </div>
+
+          {/* Desktop nav — left side in RTL */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-semibold transition-colors duration-200"
+                style={{ color: "#8BA4C8", textDecoration: "none" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "#00E676")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "#8BA4C8")
+                }
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="tel:03-123-4567"
+              className="text-sm font-bold px-4 py-2 rounded-full transition-all duration-200"
+              style={{
+                background: "#00E676",
+                color: "#050E1F",
+                textDecoration: "none",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#00c864";
+                e.currentTarget.style.boxShadow =
+                  "0 0 16px rgba(0,230,118,0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#00E676";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              📞 03-123-4567
+            </a>
+          </nav>
+
+          {/* Hamburger — left side on mobile */}
+          <button
+            className="md:hidden flex flex-col gap-1.5 p-2"
+            aria-label="פתח תפריט"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span
+              className="block w-6 h-0.5 transition-all duration-300"
+              style={{
+                background: "#F0F4FF",
+                transform: menuOpen
+                  ? "rotate(45deg) translate(4px, 4px)"
+                  : "none",
+              }}
+            />
+            <span
+              className="block w-6 h-0.5 transition-all duration-300"
+              style={{
+                background: "#F0F4FF",
+                opacity: menuOpen ? 0 : 1,
+              }}
+            />
+            <span
+              className="block w-6 h-0.5 transition-all duration-300"
+              style={{
+                background: "#F0F4FF",
+                transform: menuOpen
+                  ? "rotate(-45deg) translate(4px, -4px)"
+                  : "none",
+              }}
+            />
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div
+            className="md:hidden py-4 border-t"
+            style={{ borderColor: "rgba(43,87,184,0.4)" }}
+          >
+            <nav className="flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-base font-semibold py-2 px-3 rounded-lg transition-colors"
+                  style={{ color: "#F0F4FF", textDecoration: "none" }}
+                  onClick={() => setMenuOpen(false)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(0,230,118,0.1)";
+                    e.currentTarget.style.color = "#00E676";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "#F0F4FF";
+                  }}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href="tel:03-123-4567"
+                className="text-base font-bold py-2 px-4 rounded-full text-center mt-2"
+                style={{
+                  background: "#00E676",
+                  color: "#050E1F",
+                  textDecoration: "none",
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                📞 03-123-4567
+              </a>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}
