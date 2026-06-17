@@ -8,17 +8,20 @@ const tickerItems = [
 ];
 
 export default function NewsTicker() {
-  const repeatedItems = [...tickerItems, ...tickerItems];
+  const repeatedItems = [...tickerItems, ...tickerItems, ...tickerItems];
 
   return (
     <div
       className="w-full overflow-hidden flex items-center"
       style={{
-        background: "#0B1F4A",
+        background: "#050E1F",
         borderBottom: "1px solid rgba(43,87,184,0.5)",
         height: "40px",
-        position: "relative",
-        zIndex: 40,
+        position: "fixed",
+        top: 0,
+        right: 0,
+        left: 0,
+        zIndex: 60,
       }}
     >
       {/* LIVE badge on the right (RTL) */}

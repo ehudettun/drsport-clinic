@@ -60,7 +60,7 @@ export default function HeroSection() {
 
       <div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        style={{ width: "100%", paddingTop: "80px" }}
+        style={{ width: "100%", paddingTop: "124px" }}
       >
         <div className="text-right max-w-3xl mr-0 ml-auto">
           {/* Badge */}
@@ -82,25 +82,27 @@ export default function HeroSection() {
           <h1
             className="font-extrabold leading-tight mb-4"
             style={{
-              fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
+              fontSize: "clamp(2.4rem, 6vw, 4.8rem)",
               color: "#F0F4FF",
-              lineHeight: 1.1,
+              lineHeight: 1.15,
             }}
           >
-            ד״ר אלון{" "}
-            <span className="neon-green glow-green">כהן</span>
+            <span className="neon-green glow-green">ד״ר ספורט</span>
+            {" — "}
+            ד״ר אלון כהן
           </h1>
 
           {/* Subtitle */}
           <h2
             className="font-bold mb-6"
             style={{
-              fontSize: "clamp(1.2rem, 3vw, 2rem)",
-              color: "#8BA4C8",
+              fontSize: "clamp(1.3rem, 3vw, 2.2rem)",
+              color: "#F0F4FF",
               lineHeight: 1.3,
             }}
           >
-            רפואת ספורט מתקדמת
+            רפואת ספורט{" "}
+            <span style={{ color: "#FF6D00" }}>מנצחת</span>
           </h2>
 
           {/* Description */}
@@ -191,7 +193,7 @@ export default function HeroSection() {
         className="absolute bottom-8 left-1/2"
         style={{ transform: "translateX(-50%)" }}
       >
-        <a href="#blog" style={{ textDecoration: "none" }}>
+        <a href="#social" style={{ textDecoration: "none" }}>
           <div
             className="flex flex-col items-center gap-2 animate-bounce"
             style={{ color: "#8BA4C8" }}

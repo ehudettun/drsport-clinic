@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 const navLinks = [
   { href: "#home", label: "בית" },
@@ -16,8 +17,9 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 right-0 left-0 z-50"
+      className="fixed right-0 left-0 z-50"
       style={{
+        top: "40px",
         background: "linear-gradient(135deg, #0B1F4A 0%, #1A3A7C 100%)",
         borderBottom: "1px solid rgba(43, 87, 184, 0.4)",
         backdropFilter: "blur(12px)",
@@ -27,24 +29,15 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo — right side in RTL */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <a
-              href="#home"
-              className="flex items-center gap-2 text-white no-underline"
-              style={{ textDecoration: "none" }}
-            >
-              <span
-                className="pulse-dot inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
-                style={{ background: "#00E676" }}
+            <a href="#home" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+              <Image
+                src="/logo.jpg"
+                alt="Dr. Sport — Dr. Alon Cohen"
+                width={120}
+                height={40}
+                style={{ objectFit: "contain", filter: "brightness(0) invert(1)" }}
+                priority
               />
-              <span
-                className="text-xl font-extrabold tracking-widest"
-                style={{ color: "#F0F4FF", letterSpacing: "0.12em" }}
-              >
-                DR.{" "}
-                <span style={{ color: "#00E676" }} className="glow-green">
-                  SPORT
-                </span>
-              </span>
             </a>
           </div>
 

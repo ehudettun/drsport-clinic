@@ -40,7 +40,7 @@ body {
 }
 
 .ticker-text {
-  animation: ticker-rtl 35s linear infinite;
+  animation: ticker-rtl 70s linear infinite;
   white-space: nowrap;
   display: inline-block;
 }
