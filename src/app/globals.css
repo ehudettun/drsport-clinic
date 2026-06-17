@@ -35,14 +35,16 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--blue-light); border-radius: 3px; }
 
 @keyframes ticker-rtl {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .ticker-text {
-  animation: ticker-rtl 70s linear infinite;
+  animation: ticker-rtl 90s linear infinite;
   white-space: nowrap;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  /* must be exactly 2x the content width for seamless loop */
 }
 
 @keyframes pulse-dot {

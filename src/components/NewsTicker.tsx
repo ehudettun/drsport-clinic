@@ -8,7 +8,8 @@ const tickerItems = [
 ];
 
 export default function NewsTicker() {
-  const repeatedItems = [...tickerItems, ...tickerItems, ...tickerItems];
+  // 2 copies exactly — animation moves -50% for seamless loop
+  const repeatedItems = [...tickerItems, ...tickerItems];
 
   return (
     <div
