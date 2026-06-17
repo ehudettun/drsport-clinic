@@ -33,9 +33,9 @@ export default function Header() {
               <Image
                 src="/logo.jpg"
                 alt="Dr. Sport — Dr. Alon Cohen"
-                width={120}
-                height={40}
-                style={{ objectFit: "contain", filter: "brightness(0) invert(1)" }}
+                width={130}
+                height={44}
+                style={{ objectFit: "contain", borderRadius: "6px", background: "white", padding: "4px 8px" }}
                 priority
               />
             </a>

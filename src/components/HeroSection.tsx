@@ -188,21 +188,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div
-        className="absolute bottom-8 left-1/2"
-        style={{ transform: "translateX(-50%)" }}
-      >
-        <a href="#social" style={{ textDecoration: "none" }}>
-          <div
-            className="flex flex-col items-center gap-2 animate-bounce"
-            style={{ color: "#8BA4C8" }}
-          >
-            <span className="text-xs">גלול למטה</span>
-            <span style={{ fontSize: "20px" }}>↓</span>
-          </div>
-        </a>
-      </div>
     </section>
   );
 }

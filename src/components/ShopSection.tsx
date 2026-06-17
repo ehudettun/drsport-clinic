@@ -34,7 +34,7 @@ export default function ShopSection() {
       alert("אנא בחר מידה לפני הוספה לסל");
       return;
     }
-    alert(`נוסף לסל! חלוק רפו סריס™ — מידה ${selectedSize} — ₪389`);
+    alert(`נוסף לסל! סקראבס ספורטיביים Dr. Sport Pro™ — מידה ${selectedSize} — ₪389`);
   };
 
   return (
@@ -50,10 +50,10 @@ export default function ShopSection() {
             className="text-3xl md:text-4xl font-extrabold mb-2"
             style={{ color: "#F0F4FF" }}
           >
-            חנות ד״ר ספורט
+            החנות של ד״ר ספורט
           </h2>
           <p className="text-base" style={{ color: "#8BA4C8" }}>
-            ביגוד רפואי מקצועי לאנשי רפואה
+            מדי סקראבס ספורטיביים לאנשי רפואה — בגדי עבודה לרופאים ואנשי רפואה
           </p>
           <div
             className="h-1 rounded-full mt-3"
@@ -109,7 +109,7 @@ export default function ShopSection() {
                 className="text-sm font-semibold"
                 style={{ color: "#8BA4C8" }}
               >
-                חלוק רפואי פרו סריס™
+                סקראבס ספורטיביים Dr. Sport Pro™
               </p>
               {selectedColor !== null && (
                 <div
@@ -130,7 +130,7 @@ export default function ShopSection() {
                 className="text-2xl font-extrabold mb-1"
                 style={{ color: "#F0F4FF" }}
               >
-                חלוק רפואי ספורטיבי — פרו סריס™
+                סקראבס ספורטיביים — Dr. Sport Pro™
               </h3>
               <div
                 className="text-3xl font-extrabold"
@@ -141,8 +141,7 @@ export default function ShopSection() {
             </div>
 
             <p className="text-sm leading-relaxed" style={{ color: "#8BA4C8" }}>
-              חלוק רפואי ייחודי המשלב טכנולוגיית ניהול לחות עם עיצוב
-              ספורטיבי. מתאים לחדרי ניתוח, קליניקות, ובשדה.
+              סקראבס מקצועיים המשלבים טכנולוגיית ניהול לחות מתקדמת עם עיצוב ספורטיבי ארגונומי. מיועדים לרופאים, אחיות, ופיזיותרפיסטים הפועלים שעות ארוכות. נוחות מרבית, עמידות גבוהה, וסגנון שמדבר בשבחי הרפואה המודרנית.
             </p>
 
             {/* Color Selector */}
