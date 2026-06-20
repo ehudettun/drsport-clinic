@@ -110,8 +110,7 @@ export default function HeroSection() {
             className="text-base md:text-lg leading-relaxed mb-10 max-w-xl mr-0 ml-auto"
             style={{ color: "#8BA4C8" }}
           >
-            מומחה בפציעות ספורט, שיקום מתקדם וחזרה מהירה לפעילות. עם
-            ניסיון של מעל 20 שנה ויותר מ-2,000 ניתוחים מוצלחים.
+            רפואת ספורט מתקדמת ומותאמת אישית, רפואה רגנרטיבית, אבחון פציעות ספורט, טיפול ושיקום ספורטאים
           </p>
 
           {/* CTA Buttons */}
@@ -165,26 +164,6 @@ export default function HeroSection() {
             </a>
           </div>
 
-          {/* Stats row */}
-          <div className="flex items-center gap-8 justify-end mt-14 flex-wrap">
-            {[
-              { value: "20+", label: "שנות ניסיון" },
-              { value: "2,000+", label: "ניתוחים מוצלחים" },
-              { value: "97%", label: "שביעות רצון" },
-            ].map((stat, i) => (
-              <div key={i} className="text-right">
-                <div
-                  className="text-2xl font-extrabold glow-green"
-                  style={{ color: "#00E676" }}
-                >
-                  {stat.value}
-                </div>
-                <div className="text-xs mt-0.5" style={{ color: "#8BA4C8" }}>
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 

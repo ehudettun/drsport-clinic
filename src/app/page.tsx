@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import NewsTicker from "@/components/NewsTicker";
 import BlogSection from "@/components/BlogSection";
-import ShopSection from "@/components/ShopSection";
 import ContactSection from "@/components/ContactSection";
 import RecoveryTracker from "@/components/RecoveryTracker";
 import SocialFeed from "@/components/SocialFeed";
@@ -19,7 +18,6 @@ export default function Home() {
       <RecoveryTracker />
       <TreatmentsSection />
       <BlogSection />
-      <ShopSection />
       <ContactSection />
       <Footer />
     </>

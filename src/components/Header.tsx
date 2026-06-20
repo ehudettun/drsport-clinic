@@ -6,7 +6,7 @@ import Image from "next/image";
 const navLinks = [
   { href: "#home", label: "בית" },
   { href: "#blog", label: "בלוג" },
-  { href: "#shop", label: "החנות" },
+  { href: "/shop", label: "החנות" },
   { href: "#recovery", label: "שיקום" },
   { href: "#treatments", label: "טיפולים" },
   { href: "#contact", label: "צור קשר" },
@@ -31,11 +31,11 @@ export default function Header() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <a href="#home" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
               <Image
-                src="/logo.jpg"
+                src="/logo.png"
                 alt="Dr. Sport — Dr. Alon Cohen"
-                width={130}
-                height={44}
-                style={{ objectFit: "contain", borderRadius: "6px", background: "white", padding: "4px 8px" }}
+                width={160}
+                height={54}
+                style={{ objectFit: "contain" }}
                 priority
               />
             </a>

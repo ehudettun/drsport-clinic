@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
 const colors = [
-  { label: "כחול", value: "#1A3A7C" },
-  { label: "לבן", value: "#F0F4FF" },
+  { label: "כחול נייבי", value: "#1A3A7C" },
   { label: "שחור", value: "#111827" },
+  { label: "ירוק", value: "#1B5E3B" },
+  { label: "לבן", value: "#F0F4FF" },
+  { label: "אפור", value: "#6B7280" },
+  { label: "טיל", value: "#0D7377" },
+];
+
+const productImages = [
+  { src: "/scrub-main.jpg", alt: "חולצת סקראבס DR Sport — כחול נייבי" },
+  { src: "/scrub-colors.jpg", alt: "חולצת סקראבס DR Sport — 6 צבעים" },
+  { src: "/scrub-catalog.jpg", alt: "חולצת סקראבס DR Sport — קטלוג" },
 ];
 
 const sizingChart = [
@@ -27,14 +37,20 @@ const comingSoon = [
 export default function ShopSection() {
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [activeImage, setActiveImage] = useState(0);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [showSizing, setShowSizing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert("אנא בחר מידה לפני הוספה לסל");
       return;
     }
-    alert(`נוסף לסל! סקראבס ספורטיביים Dr. Sport Pro™ — מידה ${selectedSize} — ₪389`);
+    const logoNote = logoFile ? ` + לוגו: ${logoFile.name}` : "";
+    alert(
+      `נוסף לסל! חולצת סקראבס עם רקימה + מכנסים Dr. Sport™ — מידה ${selectedSize} — ${colors[selectedColor].label}${logoNote} — ₪239 + משלוח ₪30`
+    );
   };
 
   return (
@@ -66,61 +82,58 @@ export default function ShopSection() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          {/* Product Image Placeholder */}
-          <div
-            className="rounded-3xl flex items-center justify-center"
-            style={{
-              background:
-                "linear-gradient(135deg, #1A3A7C 0%, #0B1F4A 50%, #2B57B8 100%)",
-              minHeight: "420px",
-              border: "1px solid rgba(43,87,184,0.4)",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            {/* Decorative circles */}
+          {/* Image Gallery */}
+          <div className="flex flex-col gap-3">
+            {/* Main Image */}
             <div
+              className="rounded-3xl overflow-hidden"
               style={{
-                position: "absolute",
-                width: "300px",
-                height: "300px",
-                borderRadius: "50%",
-                border: "1px solid rgba(0,230,118,0.15)",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%,-50%)",
+                border: "1px solid rgba(43,87,184,0.4)",
+                background: "#f8f8f8",
+                position: "relative",
+                minHeight: "380px",
               }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                width: "200px",
-                height: "200px",
-                borderRadius: "50%",
-                border: "1px solid rgba(0,230,118,0.1)",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%,-50%)",
-              }}
-            />
-            <div className="text-center relative z-10">
-              <div className="text-8xl mb-4">🥼</div>
-              <p
-                className="text-sm font-semibold"
-                style={{ color: "#8BA4C8" }}
-              >
-                סקראבס ספורטיביים Dr. Sport Pro™
-              </p>
-              {selectedColor !== null && (
-                <div
-                  className="w-6 h-6 rounded-full mx-auto mt-3 border-2"
-                  style={{
-                    background: colors[selectedColor].value,
-                    borderColor: "#00E676",
-                  }}
-                />
-              )}
+            >
+              <Image
+                src={productImages[activeImage].src}
+                alt={productImages[activeImage].alt}
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
             </div>
+
+            {/* Thumbnail Row — scrollable */}
+            {productImages.length > 1 && (
+              <div className="flex gap-3 overflow-x-auto pb-1">
+                {productImages.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(i)}
+                    style={{
+                      flex: "0 0 80px",
+                      height: "80px",
+                      borderRadius: "12px",
+                      overflow: "hidden",
+                      border:
+                        activeImage === i
+                          ? "2px solid #00E676"
+                          : "2px solid rgba(43,87,184,0.3)",
+                      background: "#f8f8f8",
+                      position: "relative",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      style={{ objectFit: "cover" }}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Details */}
@@ -130,13 +143,18 @@ export default function ShopSection() {
                 className="text-2xl font-extrabold mb-1"
                 style={{ color: "#F0F4FF" }}
               >
-                סקראבס ספורטיביים — Dr. Sport Pro™
+                חולצת סקראבס עם רקימה + מכנסי סקראבס — Dr. Sport™
               </h3>
-              <div
-                className="text-3xl font-extrabold"
-                style={{ color: "#00E676" }}
-              >
-                ₪389
+              <div className="flex items-baseline gap-3 mt-2">
+                <span
+                  className="text-3xl font-extrabold"
+                  style={{ color: "#00E676" }}
+                >
+                  ₪239
+                </span>
+                <span className="text-sm" style={{ color: "#8BA4C8" }}>
+                  + משלוח ₪30
+                </span>
               </div>
             </div>
 
@@ -215,6 +233,75 @@ export default function ShopSection() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Logo Upload */}
+            <div>
+              <p
+                className="text-sm font-semibold mb-2"
+                style={{ color: "#F0F4FF" }}
+              >
+                העלאת לוגו לרקימה{" "}
+                <span className="font-normal" style={{ color: "#8BA4C8" }}>
+                  (אופציונלי)
+                </span>
+              </p>
+              <p className="text-xs mb-3" style={{ color: "#8BA4C8" }}>
+                ניתן להעלות לוגו או טקסט לרקימה על החולצה — PNG / JPG / SVG עד 5MB
+              </p>
+              <div
+                className="rounded-xl p-4 text-center cursor-pointer transition-all duration-200"
+                style={{
+                  border: logoFile
+                    ? "2px solid #00E676"
+                    : "2px dashed rgba(43,87,184,0.4)",
+                  background: logoFile
+                    ? "rgba(0,230,118,0.05)"
+                    : "rgba(43,87,184,0.08)",
+                }}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {logoFile ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span style={{ color: "#00E676" }}>✓</span>
+                    <span className="text-sm font-semibold" style={{ color: "#00E676" }}>
+                      {logoFile.name}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setLogoFile(null);
+                        if (fileInputRef.current) fileInputRef.current.value = "";
+                      }}
+                      className="text-xs ml-2"
+                      style={{ color: "#8BA4C8" }}
+                    >
+                      הסר
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-2xl mb-1">📎</div>
+                    <p className="text-sm" style={{ color: "#8BA4C8" }}>
+                      לחץ להעלאת לוגו
+                    </p>
+                  </div>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/svg+xml"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file && file.size <= 5 * 1024 * 1024) {
+                    setLogoFile(file);
+                  } else if (file) {
+                    alert("הקובץ גדול מדי — מקסימום 5MB");
+                  }
+                }}
+              />
             </div>
 
             {/* Add to Cart */}
