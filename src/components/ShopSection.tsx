@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Image from "next/image";
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -15,9 +16,9 @@ const colors = [
 ];
 
 const productImages = [
-  { src: "/scrub-main.jpg", alt: "חולצת סקראבס DR Sport — כחול נייבי" },
-  { src: "/scrub-colors.jpg", alt: "חולצת סקראבס DR Sport — 6 צבעים" },
-  { src: "/scrub-catalog.jpg", alt: "חולצת סקראבס DR Sport — קטלוג" },
+  { src: `${BASE}/scrub-main.jpg`, alt: "חולצת סקראבס DR Sport — כחול נייבי" },
+  { src: `${BASE}/scrub-colors.jpg`, alt: "חולצת סקראבס DR Sport — 6 צבעים" },
+  { src: `${BASE}/scrub-catalog.jpg`, alt: "חולצת סקראבס DR Sport — קטלוג" },
 ];
 
 const sizingChart = [
@@ -92,13 +93,10 @@ export default function ShopSection() {
                 background: "#f8f8f8",
               }}
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={productImages[activeImage].src}
                 alt={productImages[activeImage].alt}
-                width={700}
-                height={500}
-                unoptimized
-                priority
                 style={{ width: "100%", height: "auto", objectFit: "contain", display: "block" }}
               />
             </div>
@@ -124,12 +122,10 @@ export default function ShopSection() {
                       padding: 0,
                     }}
                   >
-                    <Image
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src={img.src}
                       alt={img.alt}
-                      width={80}
-                      height={80}
-                      unoptimized
                       style={{ width: "80px", height: "80px", objectFit: "cover", display: "block" }}
                     />
                   </button>

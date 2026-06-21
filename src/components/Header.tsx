@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
@@ -31,13 +30,13 @@ export default function Header() {
           {/* Logo — right side in RTL */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <a href="#home" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-              <Image
-                src="/logo.png"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/logo.png`}
                 alt="Dr. Sport — Dr. Alon Cohen"
                 width={160}
                 height={54}
                 style={{ objectFit: "contain" }}
-                priority
               />
             </a>
           </div>
