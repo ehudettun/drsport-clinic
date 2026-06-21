@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 
 const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -89,17 +90,16 @@ export default function ShopSection() {
               style={{
                 border: "1px solid rgba(43,87,184,0.4)",
                 background: "#f8f8f8",
-                minHeight: "380px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={productImages[activeImage].src}
                 alt={productImages[activeImage].alt}
-                style={{ width: "100%", height: "380px", objectFit: "contain" }}
+                width={700}
+                height={500}
+                unoptimized
+                priority
+                style={{ width: "100%", height: "auto", objectFit: "contain", display: "block" }}
               />
             </div>
 
@@ -124,10 +124,12 @@ export default function ShopSection() {
                       padding: 0,
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={img.src}
                       alt={img.alt}
+                      width={80}
+                      height={80}
+                      unoptimized
                       style={{ width: "80px", height: "80px", objectFit: "cover", display: "block" }}
                     />
                   </button>
