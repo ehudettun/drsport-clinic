@@ -34,7 +34,7 @@ export default function Header() {
               <img
                 src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/logo.png`}
                 alt="Dr. Sport — Dr. Alon Cohen"
-                style={{ width: "160px", height: "54px", objectFit: "contain", display: "block", filter: "brightness(0) invert(1)" }}
+                style={{ width: "200px", height: "auto", objectFit: "contain", display: "block", filter: "brightness(0) invert(1)" }}
               />
             </Link>
           </div>
