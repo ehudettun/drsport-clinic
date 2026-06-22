@@ -30,14 +30,16 @@ export default function Header() {
           {/* Logo — right side in RTL */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/logo.png`}
-                alt="Dr. Sport — Dr. Alon Cohen"
-                width={160}
-                height={54}
-                style={{ objectFit: "contain" }}
-              />
+              <div style={{ background: "rgba(255,255,255,0.92)", borderRadius: "8px", padding: "4px 10px", display: "flex", alignItems: "center" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/logo.png`}
+                  alt="Dr. Sport — Dr. Alon Cohen"
+                  width={140}
+                  height={44}
+                  style={{ objectFit: "contain", display: "block" }}
+                />
+              </div>
             </Link>
           </div>
 
