@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useContent } from "@/lib/useContent";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -30,18 +31,38 @@ const sizingChart = [
   { size: "XXL", chest: "104-108", waist: "86-90", length: "120" },
 ];
 
-const comingSoon = [
-  { name: "גרביי דחיסה — ספורטמד™", price: "₪149" },
-  { name: "כפפות פיזיותרפיה — FlexGrip™", price: "₪229" },
-];
+interface ComingSoonItem {
+  name: string;
+  price: string;
+}
+
+interface ShopContent {
+  title: string;
+  subtitle: string;
+  productName: string;
+  price: string;
+  shippingCost: string;
+  comingSoon: ComingSoonItem[];
+}
 
 export default function ShopSection() {
+  const content = useContent();
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [showSizing, setShowSizing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const shop = content ? (content.shop as ShopContent) : null;
+
+  const productName = shop ? shop.productName : "חולצת סקראבס עם רקימה + מכנסי סקראבס — Dr. Sport™";
+  const price = shop ? shop.price : "₪239";
+  const shippingCost = shop ? shop.shippingCost : "30";
+  const comingSoon: ComingSoonItem[] = shop ? shop.comingSoon : [
+    { name: "גרביי דחיסה — ספורטמד™", price: "₪149" },
+    { name: "כפפות פיזיותרפיה — FlexGrip™", price: "₪229" },
+  ];
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -50,7 +71,7 @@ export default function ShopSection() {
     }
     const logoNote = logoFile ? ` + לוגו: ${logoFile.name}` : "";
     alert(
-      `נוסף לסל! חולצת סקראבס עם רקימה + מכנסים Dr. Sport™ — מידה ${selectedSize} — ${colors[selectedColor].label}${logoNote} — ₪239 + משלוח ₪30`
+      `נוסף לסל! ${productName} — מידה ${selectedSize} — ${colors[selectedColor].label}${logoNote} — ${price} + משלוח ₪${shippingCost}`
     );
   };
 
@@ -67,10 +88,10 @@ export default function ShopSection() {
             className="text-3xl md:text-4xl font-extrabold mb-2"
             style={{ color: "#F0F4FF" }}
           >
-            החנות של ד״ר ספורט
+            {shop ? shop.title : "החנות של ד״ר ספורט"}
           </h2>
           <p className="text-base" style={{ color: "#8BA4C8" }}>
-            מדי סקראבס ספורטיביים לאנשי רפואה — בגדי עבודה לרופאים ואנשי רפואה
+            {shop ? shop.subtitle : "מדי סקראבס ספורטיביים לאנשי רפואה — בגדי עבודה לרופאים ואנשי רפואה"}
           </p>
           <div
             className="h-1 rounded-full mt-3"
@@ -141,17 +162,17 @@ export default function ShopSection() {
                 className="text-2xl font-extrabold mb-1"
                 style={{ color: "#F0F4FF" }}
               >
-                חולצת סקראבס עם רקימה + מכנסי סקראבס — Dr. Sport™
+                {productName}
               </h3>
               <div className="flex items-baseline gap-3 mt-2">
                 <span
                   className="text-3xl font-extrabold"
                   style={{ color: "#00E676" }}
                 >
-                  ₪239
+                  {price}
                 </span>
                 <span className="text-sm" style={{ color: "#8BA4C8" }}>
-                  + משלוח ₪30
+                  + משלוח ₪{shippingCost}
                 </span>
               </div>
             </div>

@@ -1,6 +1,21 @@
 "use client";
 
+import { useContent } from "@/lib/useContent";
+
+interface HeroContent {
+  badge: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  phone: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+
 export default function HeroSection() {
+  const content = useContent();
+  const hero = content ? (content.hero as HeroContent) : null;
+
   return (
     <section
       id="home"
@@ -74,7 +89,7 @@ export default function HeroSection() {
                 letterSpacing: "0.08em",
               }}
             >
-              מרפאת ספורט מובילה בישראל
+              {hero ? hero.badge : "מרפאת ספורט מובילה בישראל"}
             </span>
           </div>
 
@@ -110,7 +125,7 @@ export default function HeroSection() {
             className="text-base md:text-lg leading-relaxed mb-10 max-w-xl mr-0 ml-auto"
             style={{ color: "#8BA4C8" }}
           >
-            רפואת ספורט מתקדמת ומותאמת אישית, רפואה רגנרטיבית, אבחון פציעות ספורט, טיפול ושיקום ספורטאים
+            {hero ? hero.description : "רפואת ספורט מתקדמת ומותאמת אישית, רפואה רגנרטיבית, אבחון פציעות ספורט, טיפול ושיקום ספורטאים"}
           </p>
 
           {/* CTA Buttons */}
@@ -136,7 +151,7 @@ export default function HeroSection() {
                 el.style.transform = "none";
               }}
             >
-              📅 קבע תור
+              {hero ? hero.ctaPrimary : "📅 קבע תור"}
             </a>
             <a
               href="#blog"
@@ -160,7 +175,7 @@ export default function HeroSection() {
                 el.style.transform = "none";
               }}
             >
-              קרא עוד
+              {hero ? hero.ctaSecondary : "קרא עוד"}
             </a>
           </div>
 

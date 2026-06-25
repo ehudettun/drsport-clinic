@@ -1,11 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { useContent } from "@/lib/useContent";
 
 const initialForm = { name: "", phone: "", email: "", reason: "", notes: "" };
 
+interface ContactContent {
+  title: string;
+  subtitle: string;
+  phone: string;
+  responseTime: string;
+  reasons: string[];
+}
+
 export default function ContactSection() {
+  const content = useContent();
   const [form, setForm] = useState(initialForm);
+
+  const contact = content ? (content.contact as ContactContent) : null;
+
+  const title = contact ? contact.title : "בואו נדבר";
+  const subtitle = contact ? contact.subtitle : "לתיאום פגישה, הרצאה או שיחת ייעוץ — השאירו את פרטיכם כאן ונדאג לחזור אליכם";
+  const phone = contact ? contact.phone : "03-123-4567";
+  const responseTime = contact ? contact.responseTime : "מענה תוך 24 שעות · ייעוץ ראשוני ללא התחייבות";
+  const reasons: string[] = contact ? contact.reasons : ["הזמנת הרצאה", "תיאום שיחת ייעוץ", "טיפול בקליניקה", "אחר"];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -23,10 +41,10 @@ export default function ContactSection() {
         {/* Section Header */}
         <div className="mb-10 text-right">
           <h2 className="text-3xl md:text-4xl font-extrabold mb-2" style={{ color: "#F0F4FF" }}>
-            בואו נדבר
+            {title}
           </h2>
           <p className="text-base" style={{ color: "#8BA4C8" }}>
-            לתיאום פגישה, הרצאה או שיחת ייעוץ — השאירו את פרטיכם כאן ונדאג לחזור אליכם
+            {subtitle}
           </p>
           <div className="h-1 rounded-full mt-3" style={{ background: "linear-gradient(90deg, transparent, #00E676)", width: "160px", marginLeft: "auto" }} />
         </div>
@@ -35,9 +53,9 @@ export default function ContactSection() {
         <div className="rounded-2xl p-6 mb-8 text-center" style={{ background: "linear-gradient(135deg, #0B1F4A 0%, #1A3A7C 100%)", border: "1px solid rgba(0,230,118,0.3)", boxShadow: "0 0 40px rgba(0,230,118,0.08)" }}>
           <p className="text-xl md:text-2xl font-extrabold" style={{ color: "#F0F4FF" }}>
             קבע תור עכשיו —{" "}
-            <a href="tel:03-123-4567" className="neon-green glow-green" style={{ textDecoration: "none" }}>03-123-4567</a>
+            <a href={`tel:${phone}`} className="neon-green glow-green" style={{ textDecoration: "none" }}>{phone}</a>
           </p>
-          <p className="mt-2 text-sm" style={{ color: "#8BA4C8" }}>מענה תוך 24 שעות · ייעוץ ראשוני ללא התחייבות</p>
+          <p className="mt-2 text-sm" style={{ color: "#8BA4C8" }}>{responseTime}</p>
         </div>
 
         {/* Form */}
@@ -78,10 +96,9 @@ export default function ContactSection() {
                   onFocus={(e) => { e.currentTarget.style.borderColor = "#00E676"; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(43,87,184,0.4)"; }}>
                   <option value="" style={{ background: "#0D1B35" }}>בחר סיבה...</option>
-                  <option value="lecture" style={{ background: "#0D1B35" }}>הזמנת הרצאה</option>
-                  <option value="consult" style={{ background: "#0D1B35" }}>תיאום שיחת ייעוץ</option>
-                  <option value="clinic" style={{ background: "#0D1B35" }}>טיפול בקליניקה</option>
-                  <option value="other" style={{ background: "#0D1B35" }}>אחר</option>
+                  {reasons.map((reason, i) => (
+                    <option key={i} value={reason} style={{ background: "#0D1B35" }}>{reason}</option>
+                  ))}
                 </select>
               </div>
             </div>

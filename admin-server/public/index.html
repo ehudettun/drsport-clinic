@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ד״ר ספורט — לוח ניהול</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: #050E1F;
+      color: #F0F4FF;
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    .topbar {
+      background: #0D1B35;
+      border-bottom: 1px solid rgba(43,87,184,0.4);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #00E676;
+    }
+
+    .topbar h1 span { color: #F0F4FF; }
+
+    .save-btn {
+      background: #00E676;
+      color: #050E1F;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .save-btn:hover { background: #00c864; box-shadow: 0 0 20px rgba(0,230,118,0.4); }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .auth-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-row label { font-size: 0.8rem; color: #8BA4C8; }
+
+    .auth-row input {
+      background: rgba(43,87,184,0.2);
+      border: 1px solid rgba(43,87,184,0.4);
+      color: #F0F4FF;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      width: 180px;
+    }
+
+    .notification {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      z-index: 999;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+    .notification.success { background: #00E676; color: #050E1F; }
+    .notification.error { background: #FF3B30; color: #fff; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 16px 24px 0;
+      border-bottom: 1px solid rgba(43,87,184,0.3);
+      background: #0D1B35;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #8BA4C8;
+      padding: 10px 16px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.15s;
+      border-bottom: 2px solid transparent;
+    }
+    .tab-btn:hover { color: #F0F4FF; background: rgba(43,87,184,0.1); }
+    .tab-btn.active { color: #00E676; border-bottom-color: #00E676; background: rgba(0,230,118,0.05); }
+
+    .main-content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #F0F4FF;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(43,87,184,0.3);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .field-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #8BA4C8;
+    }
+
+    .field-group input,
+    .field-group textarea,
+    .field-group select {
+      background: rgba(43,87,184,0.1);
+      border: 1px solid rgba(43,87,184,0.4);
+      color: #F0F4FF;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      direction: rtl;
+    }
+    .field-group input:focus,
+    .field-group textarea:focus {
+      border-color: #00E676;
+      box-shadow: 0 0 10px rgba(0,230,118,0.15);
+    }
+    .field-group textarea { resize: vertical; min-height: 80px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* Array items */
+    .array-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .ticker-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .ticker-item input { flex: 1; }
+
+    .card {
+      background: #0D1B35;
+      border: 1px solid rgba(43,87,184,0.3);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #F0F4FF;
+    }
+
+    .del-btn {
+      background: rgba(255,59,48,0.15);
+      border: 1px solid rgba(255,59,48,0.3);
+      color: #FF3B30;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .del-btn:hover { background: rgba(255,59,48,0.3); }
+
+    .add-btn {
+      background: rgba(0,230,118,0.1);
+      border: 1px solid rgba(0,230,118,0.3);
+      color: #00E676;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.15s;
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .add-btn:hover { background: rgba(0,230,118,0.2); }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .range-row input[type=range] { flex: 1; accent-color: #00E676; }
+    .range-val {
+      font-weight: 800;
+      color: #00E676;
+      font-size: 0.9rem;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .color-preview {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.2);
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    .bottom-save {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .coming-soon-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .coming-soon-row input { flex: 1; }
+    .coming-soon-row .price-in { width: 100px !important; flex: none; }
+  </style>
+</head>
+<body>
+
+<div id="notification" class="notification"></div>
+
+<div class="topbar">
+  <h1>ד״ר ספורט <span>— לוח ניהול</span></h1>
+  <div class="auth-row">
+    <label>סיסמה:</label>
+    <input type="password" id="adminPassword" placeholder="drsport2024" />
+    <button class="save-btn" onclick="saveContent()">שמור שינויים</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('ticker', this)">טיקר מבזקים</button>
+  <button class="tab-btn" onclick="switchTab('athletes', this)">מעקב שיקום</button>
+  <button class="tab-btn" onclick="switchTab('hero', this)">גיבור הסקשן</button>
+  <button class="tab-btn" onclick="switchTab('treatments', this)">טיפולים</button>
+  <button class="tab-btn" onclick="switchTab('shop', this)">חנות</button>
+  <button class="tab-btn" onclick="switchTab('contact', this)">צור קשר</button>
+</div>
+
+<div class="main-content">
+
+  <!-- TICKER -->
+  <div id="tab-ticker" class="tab-panel active">
+    <div class="section-title">טיקר מבזקים</div>
+    <div id="ticker-list" class="array-list"></div>
+    <button class="add-btn" onclick="addTickerItem()">+ הוסף מבזק</button>
+  </div>
+
+  <!-- ATHLETES -->
+  <div id="tab-athletes" class="tab-panel">
+    <div class="section-title">ספורטאים בשיקום</div>
+    <div id="athletes-list"></div>
+    <button class="add-btn" onclick="addAthlete()">+ הוסף ספורטאי</button>
+
+    <div class="section-title" style="margin-top:40px;">סטטיסטיקות שיקום</div>
+    <div id="stats-list" class="grid-2"></div>
+  </div>
+
+  <!-- HERO -->
+  <div id="tab-hero" class="tab-panel">
+    <div class="section-title">גיבור הסקשן</div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label>תג (Badge)</label>
+        <input type="text" id="hero-badge" />
+      </div>
+      <div class="field-group">
+        <label>טלפון</label>
+        <input type="text" id="hero-phone" />
+      </div>
+    </div>
+    <div class="field-group">
+      <label>כותרת ראשית</label>
+      <input type="text" id="hero-title" />
+    </div>
+    <div class="field-group">
+      <label>כותרת משנה</label>
+      <input type="text" id="hero-subtitle" />
+    </div>
+    <div class="field-group">
+      <label>תיאור</label>
+      <textarea id="hero-description" rows="3"></textarea>
+    </div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label>כפתור ראשי (CTA Primary)</label>
+        <input type="text" id="hero-ctaPrimary" />
+      </div>
+      <div class="field-group">
+        <label>כפתור משני (CTA Secondary)</label>
+        <input type="text" id="hero-ctaSecondary" />
+      </div>
+    </div>
+  </div>
+
+  <!-- TREATMENTS -->
+  <div id="tab-treatments" class="tab-panel">
+    <div class="section-title">טיפולים קליניים</div>
+    <div id="treatments-list"></div>
+    <button class="add-btn" onclick="addTreatment()">+ הוסף טיפול</button>
+  </div>
+
+  <!-- SHOP -->
+  <div id="tab-shop" class="tab-panel">
+    <div class="section-title">החנות</div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label>כותרת החנות</label>
+        <input type="text" id="shop-title" />
+      </div>
+      <div class="field-group">
+        <label>מחיר מוצר</label>
+        <input type="text" id="shop-price" />
+      </div>
+    </div>
+    <div class="field-group">
+      <label>תת-כותרת</label>
+      <input type="text" id="shop-subtitle" />
+    </div>
+    <div class="field-group">
+      <label>שם המוצר</label>
+      <input type="text" id="shop-productName" />
+    </div>
+    <div class="field-group">
+      <label>עלות משלוח (מספר בלבד)</label>
+      <input type="text" id="shop-shippingCost" />
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">בקרוב בחנות</div>
+    <div id="coming-soon-list"></div>
+    <button class="add-btn" onclick="addComingSoon()">+ הוסף פריט</button>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="tab-contact" class="tab-panel">
+    <div class="section-title">צור קשר</div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label>כותרת</label>
+        <input type="text" id="contact-title" />
+      </div>
+      <div class="field-group">
+        <label>טלפון</label>
+        <input type="text" id="contact-phone" />
+      </div>
+    </div>
+    <div class="field-group">
+      <label>תת-כותרת</label>
+      <textarea id="contact-subtitle" rows="2"></textarea>
+    </div>
+    <div class="field-group">
+      <label>זמן מענה</label>
+      <input type="text" id="contact-responseTime" />
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">סיבות פנייה</div>
+    <div id="reasons-list" class="array-list"></div>
+    <button class="add-btn" onclick="addReason()">+ הוסף סיבה</button>
+  </div>
+
+  <div class="bottom-save">
+    <button class="save-btn" style="padding: 14px 40px; font-size: 1rem;" onclick="saveContent()">שמור שינויים</button>
+  </div>
+
+</div>
+
+<script>
+  let content = null;
+
+  // Init password from localStorage
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('drsport_admin_pw');
+    if (saved) document.getElementById('adminPassword').value = saved;
+    else document.getElementById('adminPassword').value = 'drsport2024';
+    loadContent();
+  });
+
+  document.getElementById('adminPassword').addEventListener('change', (e) => {
+    localStorage.setItem('drsport_admin_pw', e.target.value);
+  });
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function showNotification(msg, type) {
+    const el = document.getElementById('notification');
+    el.textContent = msg;
+    el.className = 'notification ' + type;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 3000);
+  }
+
+  async function loadContent() {
+    try {
+      const res = await fetch('/api/content');
+      content = await res.json();
+      renderAll();
+    } catch (e) {
+      showNotification('שגיאה בטעינת התוכן', 'error');
+    }
+  }
+
+  function renderAll() {
+    renderTicker();
+    renderAthletes();
+    renderStats();
+    renderHero();
+    renderTreatments();
+    renderShop();
+    renderContact();
+  }
+
+  // ---- TICKER ----
+  function renderTicker() {
+    const list = document.getElementById('ticker-list');
+    list.innerHTML = '';
+    (content.ticker || []).forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'ticker-item';
+      row.innerHTML = `
+        <input type="text" value="${escHtml(item)}" oninput="content.ticker[${i}]=this.value" />
+        <button class="del-btn" onclick="removeTicker(${i})">מחק</button>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function addTickerItem() {
+    content.ticker.push('מבזק חדש: ');
+    renderTicker();
+  }
+
+  function removeTicker(i) {
+    content.ticker.splice(i, 1);
+    renderTicker();
+  }
+
+  // ---- ATHLETES ----
+  function renderAthletes() {
+    const list = document.getElementById('athletes-list');
+    list.innerHTML = '';
+    (content.athletes || []).forEach((a, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-header">
+          <h3>${escHtml(a.name) || 'ספורטאי חדש'}</h3>
+          <button class="del-btn" onclick="removeAthlete(${i})">מחק</button>
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label>שם</label>
+            <input type="text" value="${escHtml(a.name)}" oninput="content.athletes[${i}].name=this.value; this.closest('.card').querySelector('h3').textContent=this.value||'ספורטאי חדש'" />
+          </div>
+          <div class="field-group">
+            <label>ענף ספורט</label>
+            <input type="text" value="${escHtml(a.sport)}" oninput="content.athletes[${i}].sport=this.value" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label>פציעה</label>
+          <input type="text" value="${escHtml(a.injury)}" oninput="content.athletes[${i}].injury=this.value" />
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label>שלב שיקום</label>
+            <input type="text" value="${escHtml(a.phase)}" oninput="content.athletes[${i}].phase=this.value" />
+          </div>
+          <div class="field-group">
+            <label>צבע תג <span class="color-preview" id="cp-${i}" style="background:${escHtml(a.phaseColor)}"></span></label>
+            <input type="text" value="${escHtml(a.phaseColor)}" oninput="content.athletes[${i}].phaseColor=this.value; document.getElementById('cp-${i}').style.background=this.value" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label>התקדמות שיקום (%)</label>
+          <div class="range-row">
+            <input type="range" min="0" max="100" value="${a.progress}" oninput="content.athletes[${i}].progress=parseInt(this.value); document.getElementById('rv-${i}').textContent=this.value+'%'" />
+            <span class="range-val" id="rv-${i}">${a.progress}%</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>צפי חזרה (ETA)</label>
+          <input type="text" value="${escHtml(a.eta)}" oninput="content.athletes[${i}].eta=this.value" />
+        </div>
+        <div class="field-group">
+          <label>תיאור</label>
+          <textarea rows="4" oninput="content.athletes[${i}].description=this.value">${escHtml(a.description)}</textarea>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function addAthlete() {
+    content.athletes.push({
+      name: 'ספורטאי חדש',
+      sport: '⚽ כדורגל',
+      injury: '',
+      phase: 'שלב 1 — לאחר ניתוח',
+      phaseColor: '#8BA4C8',
+      progress: 10,
+      eta: '',
+      description: ''
+    });
+    renderAthletes();
+  }
+
+  function removeAthlete(i) {
+    content.athletes.splice(i, 1);
+    renderAthletes();
+  }
+
+  // ---- STATS ----
+  function renderStats() {
+    const list = document.getElementById('stats-list');
+    list.innerHTML = '';
+    (content.recoveryStats || []).forEach((s, i) => {
+      const col = document.createElement('div');
+      col.innerHTML = `
+        <div class="field-group">
+          <label>תווית ${i + 1}</label>
+          <input type="text" value="${escHtml(s.label)}" oninput="content.recoveryStats[${i}].label=this.value" />
+        </div>
+        <div class="field-group">
+          <label>ערך ${i + 1}</label>
+          <input type="text" value="${escHtml(s.value)}" oninput="content.recoveryStats[${i}].value=this.value" />
+        </div>
+      `;
+      list.appendChild(col);
+    });
+  }
+
+  // ---- HERO ----
+  function renderHero() {
+    const h = content.hero || {};
+    document.getElementById('hero-badge').value = h.badge || '';
+    document.getElementById('hero-title').value = h.title || '';
+    document.getElementById('hero-subtitle').value = h.subtitle || '';
+    document.getElementById('hero-description').value = h.description || '';
+    document.getElementById('hero-phone').value = h.phone || '';
+    document.getElementById('hero-ctaPrimary').value = h.ctaPrimary || '';
+    document.getElementById('hero-ctaSecondary').value = h.ctaSecondary || '';
+
+    ['badge','title','subtitle','description','phone','ctaPrimary','ctaSecondary'].forEach(key => {
+      document.getElementById('hero-' + key).addEventListener('input', function() {
+        if (!content.hero) content.hero = {};
+        content.hero[key] = this.value;
+      });
+    });
+  }
+
+  // ---- TREATMENTS ----
+  function renderTreatments() {
+    const list = document.getElementById('treatments-list');
+    list.innerHTML = '';
+    (content.treatments || []).forEach((t, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-header">
+          <h3>${escHtml(t.icon)} ${escHtml(t.title) || 'טיפול חדש'}</h3>
+          <button class="del-btn" onclick="removeTreatment(${i})">מחק</button>
+        </div>
+        <div class="grid-2">
+          <div class="field-group">
+            <label>אייקון (emoji)</label>
+            <input type="text" value="${escHtml(t.icon)}" oninput="content.treatments[${i}].icon=this.value" />
+          </div>
+          <div class="field-group">
+            <label>צבע accent <span class="color-preview" id="tcp-${i}" style="background:${escHtml(t.accent)}"></span></label>
+            <input type="text" value="${escHtml(t.accent)}" oninput="content.treatments[${i}].accent=this.value; document.getElementById('tcp-${i}').style.background=this.value" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label>כותרת</label>
+          <input type="text" value="${escHtml(t.title)}" oninput="content.treatments[${i}].title=this.value" />
+        </div>
+        <div class="field-group">
+          <label>תיאור</label>
+          <textarea rows="3" oninput="content.treatments[${i}].description=this.value">${escHtml(t.description)}</textarea>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function addTreatment() {
+    content.treatments.push({ icon: '💊', title: 'טיפול חדש', description: '', accent: '#2B57B8' });
+    renderTreatments();
+  }
+
+  function removeTreatment(i) {
+    content.treatments.splice(i, 1);
+    renderTreatments();
+  }
+
+  // ---- SHOP ----
+  function renderShop() {
+    const s = content.shop || {};
+    document.getElementById('shop-title').value = s.title || '';
+    document.getElementById('shop-subtitle').value = s.subtitle || '';
+    document.getElementById('shop-productName').value = s.productName || '';
+    document.getElementById('shop-price').value = s.price || '';
+    document.getElementById('shop-shippingCost').value = s.shippingCost || '';
+
+    ['title','subtitle','productName','price','shippingCost'].forEach(key => {
+      document.getElementById('shop-' + key).addEventListener('input', function() {
+        if (!content.shop) content.shop = {};
+        content.shop[key] = this.value;
+      });
+    });
+
+    renderComingSoon();
+  }
+
+  function renderComingSoon() {
+    const list = document.getElementById('coming-soon-list');
+    list.innerHTML = '';
+    ((content.shop || {}).comingSoon || []).forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'coming-soon-row';
+      row.innerHTML = `
+        <input type="text" value="${escHtml(item.name)}" placeholder="שם המוצר" oninput="content.shop.comingSoon[${i}].name=this.value" />
+        <input type="text" class="price-in" value="${escHtml(item.price)}" placeholder="₪149" oninput="content.shop.comingSoon[${i}].price=this.value" />
+        <button class="del-btn" onclick="removeComingSoon(${i})">מחק</button>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function addComingSoon() {
+    if (!content.shop.comingSoon) content.shop.comingSoon = [];
+    content.shop.comingSoon.push({ name: 'מוצר חדש', price: '₪0' });
+    renderComingSoon();
+  }
+
+  function removeComingSoon(i) {
+    content.shop.comingSoon.splice(i, 1);
+    renderComingSoon();
+  }
+
+  // ---- CONTACT ----
+  function renderContact() {
+    const c = content.contact || {};
+    document.getElementById('contact-title').value = c.title || '';
+    document.getElementById('contact-subtitle').value = c.subtitle || '';
+    document.getElementById('contact-phone').value = c.phone || '';
+    document.getElementById('contact-responseTime').value = c.responseTime || '';
+
+    ['title','subtitle','phone','responseTime'].forEach(key => {
+      document.getElementById('contact-' + key).addEventListener('input', function() {
+        if (!content.contact) content.contact = {};
+        content.contact[key] = this.value;
+      });
+    });
+
+    renderReasons();
+  }
+
+  function renderReasons() {
+    const list = document.getElementById('reasons-list');
+    list.innerHTML = '';
+    ((content.contact || {}).reasons || []).forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'ticker-item';
+      row.innerHTML = `
+        <input type="text" value="${escHtml(r)}" oninput="content.contact.reasons[${i}]=this.value" />
+        <button class="del-btn" onclick="removeReason(${i})">מחק</button>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function addReason() {
+    if (!content.contact.reasons) content.contact.reasons = [];
+    content.contact.reasons.push('סיבה חדשה');
+    renderReasons();
+  }
+
+  function removeReason(i) {
+    content.contact.reasons.splice(i, 1);
+    renderReasons();
+  }
+
+  // ---- SAVE ----
+  async function saveContent() {
+    const pw = document.getElementById('adminPassword').value || 'drsport2024';
+    localStorage.setItem('drsport_admin_pw', pw);
+
+    try {
+      const res = await fetch('/api/content', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${pw}`
+        },
+        body: JSON.stringify(content, null, 2)
+      });
+
+      if (res.ok) {
+        showNotification('השינויים נשמרו בהצלחה!', 'success');
+      } else {
+        const err = await res.json();
+        showNotification('שגיאה: ' + (err.error || res.status), 'error');
+      }
+    } catch (e) {
+      showNotification('שגיאת רשת — בדוק שהשרת רץ', 'error');
+    }
+  }
+
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
