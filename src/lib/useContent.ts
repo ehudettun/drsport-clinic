@@ -9,8 +9,16 @@ function fetchContent(): Promise<Record<string, unknown>> {
   if (_cache) return Promise.resolve(_cache);
   if (!_promise) {
     _promise = fetch(`${BASE}/content.json`)
-      .then(r => r.json())
-      .then(data => { _cache = data; return data; });
+      .then(r => {
+        if (!r.ok) throw new Error(`content.json: ${r.status}`);
+        return r.json();
+      })
+      .then(data => { _cache = data; return data; })
+      .catch(err => {
+        console.error('useContent: failed to load content.json', err);
+        _promise = null; // allow retry
+        return {} as Record<string, unknown>;
+      });
   }
   return _promise;
 }
@@ -18,8 +26,10 @@ function fetchContent(): Promise<Record<string, unknown>> {
 export function useContent() {
   const [content, setContent] = useState<Record<string, unknown> | null>(_cache);
   useEffect(() => {
-    if (_cache) return;
-    fetchContent().then(setContent);
+    if (_cache) { setContent(_cache); return; }
+    fetchContent().then(data => {
+      if (Object.keys(data).length > 0) setContent(data);
+    });
   }, []);
   return content;
 }

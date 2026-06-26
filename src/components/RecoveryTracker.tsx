@@ -28,10 +28,8 @@ function getProgressGradient(progress: number): string {
 export default function RecoveryTracker() {
   const content = useContent();
 
-  if (!content) return null;
-
-  const athletes = content.athletes as Athlete[];
-  const recoveryStats = content.recoveryStats as RecoveryStat[];
+  const athletes = (content?.athletes as Athlete[]) ?? [];
+  const recoveryStats = (content?.recoveryStats as RecoveryStat[]) ?? [];
 
   return (
     <section
