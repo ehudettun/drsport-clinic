@@ -1,35 +1,27 @@
+"use client";
+
 import { useState, useEffect } from 'react';
+import defaultContent from '../../public/content.json';
 
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+export type ContentData = typeof defaultContent;
 
-let _cache: Record<string, unknown> | null = null;
-let _promise: Promise<Record<string, unknown>> | null = null;
+let _cache: ContentData = defaultContent;
 
-function fetchContent(): Promise<Record<string, unknown>> {
-  if (_cache) return Promise.resolve(_cache);
-  if (!_promise) {
-    _promise = fetch(`${BASE}/content.json`)
-      .then(r => {
-        if (!r.ok) throw new Error(`content.json: ${r.status}`);
-        return r.json();
-      })
-      .then(data => { _cache = data; return data; })
-      .catch(err => {
-        console.error('useContent: failed to load content.json', err);
-        _promise = null; // allow retry
-        return {} as Record<string, unknown>;
-      });
-  }
-  return _promise;
-}
+export function useContent(): ContentData {
+  const [content, setContent] = useState<ContentData>(_cache);
 
-export function useContent() {
-  const [content, setContent] = useState<Record<string, unknown> | null>(_cache);
   useEffect(() => {
-    if (_cache) { setContent(_cache); return; }
-    fetchContent().then(data => {
-      if (Object.keys(data).length > 0) setContent(data);
-    });
+    const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+    fetch(`${BASE}/content.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && typeof data === 'object') {
+          _cache = data as ContentData;
+          setContent(_cache);
+        }
+      })
+      .catch(() => { /* keep defaults */ });
   }, []);
+
   return content;
 }
