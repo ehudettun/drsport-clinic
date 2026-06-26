@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import defaultContent from '../../public/content.json';
-
-export type ContentData = typeof defaultContent;
+import defaultContent, { type ContentData } from './defaultContent';
 
 let _cache: ContentData = defaultContent;
 
@@ -14,13 +12,13 @@ export function useContent(): ContentData {
     const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
     fetch(`${BASE}/content.json`)
       .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (data && typeof data === 'object') {
-          _cache = data as ContentData;
-          setContent(_cache);
+      .then((data: ContentData | null) => {
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+          _cache = data;
+          setContent(data);
         }
       })
-      .catch(() => { /* keep defaults */ });
+      .catch(() => { /* keep defaults on error */ });
   }, []);
 
   return content;
